@@ -93,11 +93,14 @@ if st.button('Analyze Data'):
     st.subheader(f"Average Fare Collected by Pickup Location on {day_of_week}")
     df_grouped_locid = filtered_data.groupby("PULocationID")["total_amount"].mean().reset_index()
     df_grouped_locid = df_grouped_locid.sort_values(by="total_amount", ascending=False)
-    
-    plt.figure(figsize=(30, 10))
+
+    # Show only the top 10 pickup locations
+    df_grouped_locid = df_grouped_locid.head(10)
+
+    plt.figure(figsize=(15, 7))  # Adjusted figure size for readability
     sns.barplot(data=df_grouped_locid, x="PULocationID", y="total_amount", color="skyblue", order=df_grouped_locid["PULocationID"])
     plt.xticks(rotation=90)
-    plt.title(f"Average Fare Collected by Pickup Location on {day_of_week}")
+    plt.title(f"Top 10 Pickup Locations by Average Fare Collected on {day_of_week}")
     plt.xlabel("Pickup Location ID")
     plt.ylabel("Average Fare Collected ($)")
     st.pyplot(plt)
