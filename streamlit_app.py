@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Load the Parquet file
+# Load the CSV file
 file = 'data/sample_20_percent.csv'
 df = pd.read_csv(file)
 
@@ -35,6 +35,9 @@ df_cleaned = df[~outlier_rows]
 
 # Remove rows with NaN values
 df_cleaned = df_cleaned.dropna()
+
+# Convert 'tpep_pickup_datetime' to datetime if it's not already
+df_cleaned['tpep_pickup_datetime'] = pd.to_datetime(df_cleaned['tpep_pickup_datetime'], errors='coerce')
 
 # **First Section**: Display head of the data
 st.subheader("Preview of Data (First 5 Rows)")
@@ -81,7 +84,6 @@ if st.button('Analyze Data'):
     df_cleaned['day_of_week'] = df_cleaned['tpep_pickup_datetime'].dt.dayofweek
     filtered_data = df_cleaned[df_cleaned['day_of_week'] == selected_day]
 
-
     # 2. Distribution of Trip Distance for Filtered Data (by Day of Week)
     st.subheader(f"Trip Distance Distribution for {day_of_week}")
     fig, ax = plt.subplots()
@@ -118,4 +120,3 @@ if st.button('Analyze Data'):
     plt.ylabel("Number of Trips")
     plt.xticks(range(0, 24))
     st.pyplot(plt)
-
