@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Load the Parquet file
-parquet_file = 'data/yellow_tripdata_2024-01.parquet'
-df = pd.read_parquet(parquet_file)
+file = 'data/sample_20_percent.csv'
+df = pd.read_csv(file)
 
 # Title and Introduction
 st.title("🚕 Taxi Trip Analysis")
