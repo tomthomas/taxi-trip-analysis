@@ -56,7 +56,7 @@ avg_trips_per_weekday['day_of_week'] = avg_trips_per_weekday['day_of_week'].map(
 
 # Plot the average number of trips per day of the week
 plt.figure(figsize=(10, 5))
-sns.barplot(data=avg_trips_per_weekday, x='day_of_week', y='trip_count', hue='day_of_week', palette='Blues_r', legend=False)
+sns.barplot(data=avg_trips_per_weekday, x='day_of_week', y='trip_count', hue='trip_count', palette='viridis_r', legend=False)
 plt.title("Average Taxi Trips per Day of the Week")
 plt.xlabel("Day of the Week")
 plt.ylabel("Average Number of Trips")
