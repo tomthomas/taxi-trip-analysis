@@ -4,9 +4,44 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Load the CSV file
-file = 'data/sample_20_percent.csv'
-df = pd.read_csv(file)
+# Cache the CSV loading and data cleaning process
+@st.cache_data
+def load_and_clean_data(file):
+    # Load the file
+    df = pd.read_parquet(file)
+
+    # Clean the Data
+    num_cols = df.select_dtypes(include=[np.number])
+
+    # Find outliers using IQR for each numeric column
+    Q1 = num_cols.quantile(0.25)
+    Q3 = num_cols.quantile(0.75)
+    IQR = Q3 - Q1
+
+    # Define outlier bounds
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+
+    # Find outliers
+    outliers = (num_cols < lower_bound) | (num_cols > upper_bound)
+
+    # Find rows with outliers
+    outlier_rows = outliers.any(axis=1)
+
+    # Remove rows with outliers
+    df_cleaned = df[~outlier_rows]
+
+    # Remove rows with NaN values
+    df_cleaned = df_cleaned.dropna()
+
+    # Convert 'tpep_pickup_datetime' to datetime if it's not already
+    df_cleaned['tpep_pickup_datetime'] = pd.to_datetime(df_cleaned['tpep_pickup_datetime'], errors='coerce')
+    
+    return df_cleaned
+
+# Load and clean data (cached)
+file = 'data/yellow_tripdata_2024-01.parquet'
+df_cleaned = load_and_clean_data(file)
 
 # Title and Introduction
 st.title("🚕 Taxi Trip Analysis")
